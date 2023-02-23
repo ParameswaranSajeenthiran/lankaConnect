@@ -113,6 +113,7 @@ export default function WorkerProfile() {
                 </View>
             </View>
 
+            <ScrollView>
             {/* profile container */}
             <View style={styles.profileContainer}>
 
@@ -245,6 +246,7 @@ export default function WorkerProfile() {
                     </View>
                 </ScrollView>
             </View>
+            </ScrollView>
 
             {/* footer */}
             <View style={styles.footer} >
