@@ -9,14 +9,31 @@ import Search2 from "../asserts/images/Search2.png"
 import Settings from "../asserts/images/Settings.png"
 import Bookmark from "../asserts/images/Bookmark.png"
 import ProjectManagement from "../asserts/images/ProjectManagement.png"
+import firestore from '@react-native-firebase/firestore';
+
 
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Component } from "react"
+import { Component, useEffect } from "react"
 
 
 export default function WorkerProfile() {
 
+    useEffect(()=>{
+// example way of adding a doc to a colectio users
+        firestore()
+        .collection('Users')
+        .add({
+          name: 'Ada Lovelace',
+          age: 30,
+        })
+        .then(() => {
+          console.log('User added!');
+        });
+    },[])
+
     const Data = {
+
+
         personalInfo: {
             image: image,
             name: 'Sajeev Kugarajah',
