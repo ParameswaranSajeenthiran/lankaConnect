@@ -66,7 +66,7 @@ export default function WorkerProfile() {
         ],
         recommendations: [
             {
-                recommendName: 'Sajeev',
+                recommendName: 'Sajee',
                 recommendImage: image,
                 recommendRating: 4.2,
             },
@@ -328,6 +328,9 @@ const styles = StyleSheet.create({
     },
     profileDetails: {
         flexDirection: 'row',
+        flexWrap: "wrap",
+        justifyContent: 'center',
+        rowGap: 10,
         marginTop: 10,
         marginBottom: 5
     },
