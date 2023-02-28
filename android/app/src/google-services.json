@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "394058732471",
+    "project_id": "lankaconnect-57dd9",
+    "storage_bucket": "lankaconnect-57dd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394058732471:android:2204809c3c2d41057ece32",
+        "android_client_info": {
+          "package_name": "com.lankaconnectmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394058732471-j5sckgtf3n3b1jb0fumo9vlof9cpq5an.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrJiqj_UUl7NNNLtU1nWk9WuGEkEsaqUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394058732471-j5sckgtf3n3b1jb0fumo9vlof9cpq5an.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

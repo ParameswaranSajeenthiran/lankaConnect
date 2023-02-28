@@ -13,23 +13,44 @@ import firestore from '@react-native-firebase/firestore'
 
 
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Component, useEffect } from "react"
+import { Component, useEffect, useState } from "react"
+import codegenNativeCommands from "react-native/Libraries/Utilities/codegenNativeCommands"
 
 
-export default function WorkerProfile() {
 
-    useEffect(()=>{
-// example way of adding a doc to a colectio users
-        firestore()
-        .collection('Users')
-        .add({
-          name: 'Ada Lovelace',
-          age: 30,
-        })
-        .then(() => {
-          console.log('User added!');
-        });
-    },[])
+
+
+
+export default function WorkerProfile(props) {
+
+    const [userData, setUserData] = useState({
+        personalInfo: {
+            services: []
+        },
+        reviews: {},
+        recommendations: {}
+    })
+
+    useEffect(() => {
+        (async () => {
+          await firestore()
+          .collection('Users')
+          .doc(props.userId)
+          .get()
+          .then(docSnapshot => {
+            return setUserData(prevData => {
+                return {...prevData, personalInfo: docSnapshot.data()}
+            })
+          })
+        })();
+      
+        return () => {
+          // this now gets called when the component unmounts
+        };
+      }, []);
+    
+    // console.log(userData.personalInfo)
+
 
 
    
@@ -129,104 +150,135 @@ export default function WorkerProfile() {
                     </View>
                 </Pressable>
                 <View style={styles.headerTitleContainer}>
-                    <Text style={styles.headerTitleText}>{Data.personalInfo.name}'s Profile</Text>
+                    <Text style={styles.headerTitleText}>{userData.personalInfo.firstName} {userData.personalInfo.lastName}'s Profile</Text>
                 </View>
             </View>
 
             <ScrollView>
-            {/* profile container */}
-            <View style={styles.profileContainer}>
+                {/* profile container */}
+                <View style={styles.profileContainer}>
 
-                {/* personal info */}
-                <View style={styles.personalInfo}>
-                    <Image source={Data.personalInfo.image} style={styles.profileImage} />
+                    {/* personal info */}
+                    <View style={styles.personalInfo}>
+                        <Image source={Data.personalInfo.image} style={styles.profileImage} />
 
-                    <Text style={styles.profileName} >{Data.personalInfo.name}</Text>
+                        <Text style={styles.profileName} >{userData.personalInfo.firstName} {userData.personalInfo.lastName}</Text>
 
-                    <Text style={styles.prfoileJob} >{Data.personalInfo.role}</Text>
+                        <Text style={styles.prfoileJob} >{userData.personalInfo.services.join(' | ')}</Text>
 
-                    <Pressable onPress={() => Alert.alert('pressed')} >
-                        <View style={styles.profileLocation} >
-                            <Image source={location} style={{ marginRight: 5 }} />
-                            <Text>{Data.personalInfo.location}</Text>
+                        <Pressable onPress={() => Alert.alert('pressed')} >
+                            <View style={styles.profileLocation} >
+                                <Image source={location} style={{ marginRight: 5 }} />
+                                <Text>{userData.personalInfo.location}</Text>
+                            </View>
+                        </Pressable>
+
+                        <View style={styles.profileDetails} >
+                            <Pressable onPress={() => Alert.alert('pressed')} >
+                                <View style={styles.profileDetailsButtons} >
+                                    <Text style={styles.profileDetailsText} >Support</Text>
+                                    <Image source={share} />
+                                </View>
+                            </Pressable>
+                            <Pressable onPress={() => Alert.alert('pressed')} >
+                                <View style={styles.profileDetailsButtons} >
+                                    <Text style={styles.profileDetailsText} >Rating</Text>
+                                    <Text style={styles.profileDetailsText} >{userData.personalInfo.rating}</Text>
+                                    <View style={styles.profileDetailsRating}>
+                                        <Image source={userData.personalInfo.rating >= 1.0 ? Starfilled : Starempty} />
+                                        <Image source={userData.personalInfo.rating >= 2.0 ? Starfilled : Starempty} />
+                                        <Image source={userData.personalInfo.rating >= 3.0 ? Starfilled : Starempty} />
+                                        <Image source={userData.personalInfo.rating >= 4.0 ? Starfilled : Starempty} />
+                                        <Image source={userData.personalInfo.rating >= 5.0 ? Starfilled : Starempty} />
+                                    </View>
+                                </View>
+                            </Pressable>
+                            <Pressable onPress={() => Alert.alert('pressed')} >
+                                <View style={styles.profileDetailsButtons} >
+                                    <Text style={styles.profileDetailsText} >Projects</Text>
+                                    <Text style={styles.profileDetailsText} >{userData.personalInfo.projects}+</Text>
+                                    <Image source={ProjectManagement} />
+                                </View>
+                            </Pressable>
+                        </View>
+
+                        <Text>Available {userData.personalInfo.availability}</Text>
+                    </View>
+
+                    {/* about */}
+                    <View style={styles.about}>
+                        <Text style={styles.subHeading}>About</Text>
+                        <Text style={styles.aboutText}>
+                            {userData.personalInfo.about}
+                        </Text>
+                    </View>
+
+                    {/* reviews */}
+                    <View style={styles.reviewContainer} >
+                        <View style={styles.reviewHeader} >
+                            <Text style={styles.subHeading}>Reviews</Text>
+                            <Pressable onPress={() => Alert.alert('pressed')} >
+                                <View>
+                                    <Text style={styles.reviewSeeAll}>{'See all >'}</Text>
+                                </View>
+                            </Pressable>
+                        </View>
+
+                        <ScrollView horizontal={true}>
+                            <View style={styles.reviews}>
+
+                                {Data.reviews.map((item, index) => (
+                                    <Pressable onPress={() => Alert.alert('pressed')} key={index}>
+                                        <View style={styles.review}>
+                                            <View style={styles.reviewerDetails}>
+                                                <Image source={item.reviewerImage} style={styles.reviewerImage} />
+                                                <View style={styles.reviewerName}>
+                                                    <Text style={styles.reviewerNameText}>{item.reviewerName}</Text>
+                                                    <Text style={styles.reviewedTime}>{item.reviewedTime}</Text>
+                                                </View>
+                                                <View style={styles.reviewRating}>
+                                                    <Image source={item.rating >= 1.0 ? Starfilled : Starempty} />
+                                                    <Image source={item.rating >= 2.0 ? Starfilled : Starempty} />
+                                                    <Image source={item.rating >= 3.0 ? Starfilled : Starempty} />
+                                                    <Image source={item.rating >= 4.0 ? Starfilled : Starempty} />
+                                                    <Image source={item.rating >= 5.0 ? Starfilled : Starempty} />
+                                                </View>
+                                            </View>
+                                            <View style={styles.reviewData}>
+                                                <Text style={styles.reviewText}>
+                                                    {item.comment}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </Pressable>
+                                ))}
+
+                            </View>
+                        </ScrollView>
+                    </View>
+
+                    <Pressable onPress={() => Alert.alert('pressed')} style={styles.sendMessage}>
+                        <View >
+                            <Text style={styles.sendMessageText}>Send Message</Text>
                         </View>
                     </Pressable>
 
-                    <View style={styles.profileDetails} >
-                        <Pressable onPress={() => Alert.alert('pressed')} >
-                            <View style={styles.profileDetailsButtons} >
-                                <Text style={styles.profileDetailsText} >Support</Text>
-                                <Image source={share} />
-                            </View>
-                        </Pressable>
-                        <Pressable onPress={() => Alert.alert('pressed')} >
-                            <View style={styles.profileDetailsButtons} >
-                                <Text style={styles.profileDetailsText} >Rating</Text>
-                                <Text style={styles.profileDetailsText} >{Data.personalInfo.rating}</Text>
-                                <View style={styles.profileDetailsRating}>
-                                    <Image source={Data.personalInfo.rating >= 1.0 ? Starfilled : Starempty} />
-                                    <Image source={Data.personalInfo.rating >= 2.0 ? Starfilled : Starempty} />
-                                    <Image source={Data.personalInfo.rating >= 3.0 ? Starfilled : Starempty} />
-                                    <Image source={Data.personalInfo.rating >= 4.0 ? Starfilled : Starempty} />
-                                    <Image source={Data.personalInfo.rating >= 5.0 ? Starfilled : Starempty} />
-                                </View>
-                            </View>
-                        </Pressable>
-                        <Pressable onPress={() => Alert.alert('pressed')} >
-                            <View style={styles.profileDetailsButtons} >
-                                <Text style={styles.profileDetailsText} >Projects</Text>
-                                <Text style={styles.profileDetailsText} >{Data.personalInfo.projects}+</Text>
-                                <Image source={ProjectManagement} />
-                            </View>
-                        </Pressable>
-                    </View>
-
-                    <Text>Available {Data.personalInfo.availability}</Text>
                 </View>
 
-                {/* about */}
-                <View style={styles.about}>
-                    <Text style={styles.subHeading}>About</Text>
-                    <Text style={styles.aboutText}>
-                        {Data.personalInfo.about}
-                    </Text>
-                </View>
-
-                {/* reviews */}
-                <View style={styles.reviewContainer} >
-                    <View style={styles.reviewHeader} >
-                        <Text style={styles.subHeading}>Reviews</Text>
-                        <Pressable onPress={() => Alert.alert('pressed')} >
-                            <View>
-                                <Text style={styles.reviewSeeAll}>{'See all >'}</Text>
-                            </View>
-                        </Pressable>
-                    </View>
-
+                {/* more recommendation */}
+                <View style={styles.recommendContainer}>
+                    <Text style={styles.recommendHeader}>More plumbers in your area</Text>
                     <ScrollView horizontal={true}>
-                        <View style={styles.reviews}>
+                        <View style={styles.recommendations}>
 
-                            {Data.reviews.map((item, index) => (
+                            {Data.recommendations.map((item, index) => (
                                 <Pressable onPress={() => Alert.alert('pressed')} key={index}>
-                                    <View style={styles.review}>
-                                        <View style={styles.reviewerDetails}>
-                                            <Image source={item.reviewerImage} style={styles.reviewerImage} />
-                                            <View style={styles.reviewerName}>
-                                                <Text style={styles.reviewerNameText}>{item.reviewerName}</Text>
-                                                <Text style={styles.reviewedTime}>{item.reviewedTime}</Text>
-                                            </View>
-                                            <View style={styles.reviewRating}>
-                                                <Image source={item.rating >= 1.0 ? Starfilled : Starempty} />
-                                                <Image source={item.rating >= 2.0 ? Starfilled : Starempty} />
-                                                <Image source={item.rating >= 3.0 ? Starfilled : Starempty} />
-                                                <Image source={item.rating >= 4.0 ? Starfilled : Starempty} />
-                                                <Image source={item.rating >= 5.0 ? Starfilled : Starempty} />
-                                            </View>
-                                        </View>
-                                        <View style={styles.reviewData}>
-                                            <Text style={styles.reviewText}>
-                                                {item.comment}
-                                            </Text>
+                                    <View style={styles.recommendation}>
+                                        <Image source={item.recommendImage} style={styles.recommendImage} />
+                                        <Text style={styles.recommendName}>{item.recommendName}</Text>
+                                        <View style={styles.recommendRating}>
+                                            <Image source={Starfilled} />
+                                            <Text style={styles.recommendRatingText}>{item.recommendRating}</Text>
                                         </View>
                                     </View>
                                 </Pressable>
@@ -235,37 +287,6 @@ export default function WorkerProfile() {
                         </View>
                     </ScrollView>
                 </View>
-
-                <Pressable onPress={() => Alert.alert('pressed')} style={styles.sendMessage}>
-                    <View >
-                        <Text style={styles.sendMessageText}>Send Message</Text>
-                    </View>
-                </Pressable>
-
-            </View>
-
-            {/* more recommendation */}
-            <View style={styles.recommendContainer}>
-                <Text style={styles.recommendHeader}>More plumbers in your area</Text>
-                <ScrollView horizontal={true}>
-                    <View style={styles.recommendations}>
-
-                        {Data.recommendations.map((item, index) => (
-                            <Pressable onPress={() => Alert.alert('pressed')} key={index}>
-                                <View style={styles.recommendation}>
-                                    <Image source={item.recommendImage} style={styles.recommendImage} />
-                                    <Text style={styles.recommendName}>{item.recommendName}</Text>
-                                    <View style={styles.recommendRating}>
-                                        <Image source={Starfilled} />
-                                        <Text style={styles.recommendRatingText}>{item.recommendRating}</Text>
-                                    </View>
-                                </View>
-                            </Pressable>
-                        ))}
-
-                    </View>
-                </ScrollView>
-            </View>
             </ScrollView>
 
             {/* footer */}
