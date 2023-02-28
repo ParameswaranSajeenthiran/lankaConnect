@@ -9,7 +9,7 @@ import Search2 from "../asserts/images/Search2.png"
 import Settings from "../asserts/images/Settings.png"
 import Bookmark from "../asserts/images/Bookmark.png"
 import ProjectManagement from "../asserts/images/ProjectManagement.png"
-import firestore from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore'
 
 
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -30,6 +30,9 @@ export default function WorkerProfile() {
           console.log('User added!');
         });
     },[])
+
+
+   
 
     const Data = {
 
