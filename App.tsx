@@ -27,6 +27,7 @@ import {
 
 import Home from './components/Navigation/Home';
 import WorkerProfile from './components/Navigation/WorkerProfile';
+import LoginScreen from './components/Navigation/LoginScreen';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -72,7 +73,8 @@ function App(): JSX.Element {
         backgroundColor={backgroundStyle.backgroundColor}
       />
      {/* <Home/> */}
-     <WorkerProfile userId='user001'/>
+     {/* <WorkerProfile userId='user001'/> */}
+     <LoginScreen />
     </SafeAreaView>
   );
 }
