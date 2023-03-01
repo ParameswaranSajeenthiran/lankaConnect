@@ -72,7 +72,7 @@ function App(): JSX.Element {
         backgroundColor={backgroundStyle.backgroundColor}
       />
      {/* <Home/> */}
-     <WorkerProfile userId='user001'/>
+     <WorkerProfile userId='user002'/>
     </SafeAreaView>
   );
 }
