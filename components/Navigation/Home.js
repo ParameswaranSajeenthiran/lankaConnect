@@ -1,11 +1,47 @@
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TextInput, View,TouchableOpacity } from "react-native";
 import electricianImage from '../asserts/images/electrician.jpg'
-import profile from '../asserts/images/profile.png'
+import add from '../asserts/images/add.png'
 import drawer from '../asserts/images/drawer.png'
 import search from '../asserts/images/search.png'
 import filter from '../asserts/images/filter.png'
-export default function Home() {
+import firestore from '@react-native-firebase/firestore'
+
+export default function Home(props) {
+
+
+    const [data,setData]=React.useState([])
+
+    async function fetchData(){
+        
+ const users= firestore().collection('services').get()
+ console.log(users)
+
+    }
+   React.useEffect(() => {
+    firestore()
+    .collection('services')
+    .get()
+    .then(querySnapshot => {
+      console.log('Total users: ', querySnapshot.size);
+      setData(querySnapshot)
+        let temp=[]
+        
+      querySnapshot.forEach(documentSnapshot => {
+        temp.push( documentSnapshot.data())
+       
+
+        console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+      });
+      setData(temp)
+    });
+      }, []);
+
+    React.useEffect(()=>{
+        fetchData()
+    },[])
+    
+
     const recommendedList = [
         {
             "name": "Electrician",
@@ -94,6 +130,7 @@ export default function Home() {
         }
     ]
     return (
+        <ScrollView>
         <View style={styles.container}>
             <View style={{
                 flexDirection: 'row',
@@ -114,12 +151,19 @@ export default function Home() {
                         CONNECT
                     </Text>
                 </View>
-                <View>
-                    <Image style={{
-                        width: 20, height: 20
-                    }} source={profile} />
 
+                
+                <View>
+                <TouchableOpacity  onPress={()=>{
+                        props.navigation.navigate("createProfile")
+                }}>
+                
+                    <Image style={{
+                        width: 50, height: 50
+                    }} source={add} />
+</TouchableOpacity>
                 </View>
+                 
 
             </View>
             <View>
@@ -132,6 +176,7 @@ export default function Home() {
                     Find the best Service for you !
                 </Text>
             </View>
+
             <View style={styles.searchBar}>
                 <View style={{
                     margin: 10
@@ -161,33 +206,43 @@ export default function Home() {
             </View>
             <ScrollView horizontal={true}>
                 <View style={styles.popularList}>
-                    {popularList.map((item, index) => (
+                    {  data.length ?data.map((item, index) => (
+
                         <View key={index} style={styles.card}>
+                            
+                        <TouchableOpacity  onPress={()=>{
+                            props
+                            .navigation.navigate("worker",{
+                                userId:item.id
+                            })
+                        }}>
                             <Image style={{
                                 width: '100%',
                                 height: 200
                             }} source={electricianImage} />
+                                                  
+</TouchableOpacity>
                             <Text style={styles.cardTitle}>
-                                {item.name}
+                                {item.jobs}
 
                             </Text>
                             <Text style={styles.cardDesc}>
-                                {item.priceRating}
+                                {item.number}
 
                             </Text>
                             <Text style={styles.cardDesc}>
-                                {item.status}
+                                {item.district}
 
                             </Text>
 
 
                         </View>
-                    ))}
+                    )):null}
                 </View>
             </ScrollView>
             <View>
                 <Text style={{
-                    fontWeight: '900',
+                    fontWeight: 900,
                     fontSize: 20,
                     color: 'black',
                     margin: 10
@@ -196,10 +251,10 @@ export default function Home() {
                 </Text>
             </View>
             <View>
-                <ScrollView>
-                    <View>
-                        {recommendedList.map((item, index) => (
-                            <View style={styles.recommendedListCard}>
+               
+                   
+                        { data.length? data.map((item, index) => (
+                            <View key={index} style={styles.recommendedListCard}>
                                 <View>
                                     <Image style={
                                         {
@@ -210,7 +265,7 @@ export default function Home() {
                                 </View>
                                 <View >
                                     <Text style={styles.cardTitle}>
-                                        {item.name}
+                                        {item.jobs}
                                     </Text>
                                     <Text>
                                         on demand
@@ -220,15 +275,14 @@ export default function Home() {
                                     margin: 5
                                 }}>
                                     <Text>
-                                        {item.status}
+                                        {item.district}
                                     </Text>
                                 </View>
 
                             </View>
-                        ))}
+                        )):null}
 
-                    </View>
-                </ScrollView>
+               
             </View>
 
 
@@ -237,6 +291,7 @@ export default function Home() {
 
 
         </View>
+        </ScrollView>
     )
 }
 
@@ -248,7 +303,7 @@ const styles = StyleSheet.create({
     },
     heading: {
         fontSize: 20,
-        fontWeight: 10,
+        fontWeight: 900,
         color: 'black'
     },
     searchBar: {

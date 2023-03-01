@@ -34,7 +34,7 @@ export default function WorkerProfile(props) {
     useEffect(() => {
         (async () => {
           await firestore()
-          .collection('Users')
+          .collection('services')
           .doc(props.userId)
           .get()
           .then(docSnapshot => {
