@@ -150,7 +150,7 @@ export default function WorkerProfile(props) {
                     </View>
                 </Pressable>
                 <View style={styles.headerTitleContainer}>
-                    <Text style={styles.headerTitleText}>{userData.personalInfo.firstName} {userData.personalInfo.lastName}'s Profile</Text>
+                    <Text style={styles.headerTitleText}>{userData.name}'s Profile</Text>
                 </View>
             </View>
 
@@ -160,16 +160,16 @@ export default function WorkerProfile(props) {
 
                     {/* personal info */}
                     <View style={styles.personalInfo}>
-                        <Image source={Data.personalInfo.image} style={styles.profileImage} />
+                        <Image source={image} style={styles.profileImage} />
 
-                        <Text style={styles.profileName} >{userData.personalInfo.firstName} {userData.personalInfo.lastName}</Text>
+                        <Text style={styles.profileName} >{userData.name} </Text>
 
-                        <Text style={styles.prfoileJob} >{userData.personalInfo.services.join(' | ')}</Text>
+                        <Text style={styles.prfoileJob} >{userData.jobs}</Text>
 
                         <Pressable onPress={() => Alert.alert('pressed')} >
                             <View style={styles.profileLocation} >
                                 <Image source={location} style={{ marginRight: 5 }} />
-                                <Text>{userData.personalInfo.location}</Text>
+                                <Text>{userData.location}</Text>
                             </View>
                         </Pressable>
 
@@ -183,33 +183,33 @@ export default function WorkerProfile(props) {
                             <Pressable onPress={() => Alert.alert('pressed')} >
                                 <View style={styles.profileDetailsButtons} >
                                     <Text style={styles.profileDetailsText} >Rating</Text>
-                                    <Text style={styles.profileDetailsText} >{userData.personalInfo.rating}</Text>
+                                    <Text style={styles.profileDetailsText} >{userData.rating}</Text>
                                     <View style={styles.profileDetailsRating}>
-                                        <Image source={userData.personalInfo.rating >= 1.0 ? Starfilled : Starempty} />
-                                        <Image source={userData.personalInfo.rating >= 2.0 ? Starfilled : Starempty} />
-                                        <Image source={userData.personalInfo.rating >= 3.0 ? Starfilled : Starempty} />
-                                        <Image source={userData.personalInfo.rating >= 4.0 ? Starfilled : Starempty} />
-                                        <Image source={userData.personalInfo.rating >= 5.0 ? Starfilled : Starempty} />
+                                        <Image source={userData.rating >= 1.0 ? Starfilled : Starempty} />
+                                        <Image source={userData.rating >= 2.0 ? Starfilled : Starempty} />
+                                        <Image source={userData.rating >= 3.0 ? Starfilled : Starempty} />
+                                        <Image source={userData.rating >= 4.0 ? Starfilled : Starempty} />
+                                        <Image source={userData.rating >= 5.0 ? Starfilled : Starempty} />
                                     </View>
                                 </View>
                             </Pressable>
                             <Pressable onPress={() => Alert.alert('pressed')} >
                                 <View style={styles.profileDetailsButtons} >
                                     <Text style={styles.profileDetailsText} >Projects</Text>
-                                    <Text style={styles.profileDetailsText} >{userData.personalInfo.projects}+</Text>
+                                    <Text style={styles.profileDetailsText} >{userData.projects}+</Text>
                                     <Image source={ProjectManagement} />
                                 </View>
                             </Pressable>
                         </View>
 
-                        <Text>Available {userData.personalInfo.availability}</Text>
+                        <Text>Available {userData.availability}</Text>
                     </View>
 
                     {/* about */}
                     <View style={styles.about}>
                         <Text style={styles.subHeading}>About</Text>
                         <Text style={styles.aboutText}>
-                            {userData.personalInfo.about}
+                            {userData.about}
                         </Text>
                     </View>
 
